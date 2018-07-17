@@ -9,23 +9,21 @@
       "value": "AzureAzure@123"
     },
     "dnsLabelPrefix": {
-      "value": "mgg-102"
-    },
-    "chef_node_name": {
-      "value": "mgg-102"
+      "value": "mgg-109"
     },
     "chef_server_url": {
-      "value": "https://manage.chef.io/organizations/msys_m"
+      "value": "https://manage.chef.io/organizations/msys_manik"
     },
     "validation_client_name": {
-      "value": "msys_m-validator"
+      "value": "msys_manik-validator"
     },
     "runlist": {
-     "value": "recipe[ohai_attributes]"
+     "value": "recipe[starter]"
     },
     "validation_key": {
       "value": "-----BEGIN RSA PRIVATE KEY-----
-XYZ"
+XYZ
+-----END RSA PRIVATE KEY-----"
     },
     "secret" : {
       "value" : "abc:%123"

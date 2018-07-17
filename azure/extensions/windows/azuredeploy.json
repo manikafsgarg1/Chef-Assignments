@@ -20,12 +20,6 @@
         "description": "Unique DNS Name for the Public IP used to access the Virtual Machine."
       }
     },
-    "chef_node_name": {
-      "type": "string",
-      "metadata": {
-        "description": "The name for the node (VM) in the Chef Organization"
-      }
-    },
     "chef_server_url": {
       "type": "string",
       "metadata": {
@@ -75,12 +69,12 @@
   },
   "variables": {
     "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'sawinvm')]",
-    "nicName": "myVMNic",
+    "nicName": "myVMNisc",
     "addressPrefix": "10.0.0.0/16",
     "subnetName": "Subnet",
     "subnetPrefix": "10.0.0.0/24",
     "publicIPAddressName": "myPublicIP",
-    "vmName": "MggWin",
+    "vmName": "MggWindow",
     "virtualNetworkName": "MyVNET1",
     "vmExtensionName": "WindowsChefExtension",
     "subnetRef": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworkName'), variables('subnetName'))]"
@@ -221,7 +215,6 @@
       "typeHandlerVersion": "1210.12",
         "settings": {
           "bootstrap_options": {
-            "chef_node_name": "[parameters('chef_node_name')]",
             "chef_server_url": "[parameters('chef_server_url')]",
             "validation_client_name": "[parameters('validation_client_name')]"
           },

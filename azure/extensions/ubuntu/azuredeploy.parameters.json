@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "newStorageAccountName": {
-      "value": "mg12345"
+      "value": "manik146"
     },
     "adminUserName": {
       "value": "azure"
@@ -12,7 +12,7 @@
       "value": "Azureazure@123"
     },
     "vmDnsName": {
-      "value": "mg-105"
+      "value": "mg-159"
     },
     "osType": {
       "value": "Ubuntu-14.04.2-LTS"
@@ -24,22 +24,24 @@
       "value": "Standard_DS1_v2"
     },
     "chef_node_name": {
-      "value": "ubuntu-102"
+      "value": "mgg-159"
     },
     "chef_server_url": {
-      "value": "https://manage.chef.io/organizations/msys_m"
+      "value": "https://manage.chef.io/organizations/msys_manik"
     },
     "validation_client_name": {
-      "value": "msys_m-validator"
+      "value": "msys_manik-validator"
     },
     "runlist": {
-      "value": "recipe[ohai_attributes]"
+      "value": "recipe[starter]"
     },
     "autoUpdateClient": {
       "value": "false"
     },
     "validation_key": {
-      "value": "XYZ"
+      "value": "-----BEGIN RSA PRIVATE KEY-----
+XYZ
+-----END RSA PRIVATE KEY-----"
     },
     "secret" : {
       "value" : "abc:%123"

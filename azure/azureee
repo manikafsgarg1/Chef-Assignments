@@ -3,25 +3,24 @@
 
 INSTALL AZURE POWERSHELL  https://github.com/Azure/azure-powershell/releases
 
+1) login to azure by "cmd : azure login"/ az login
 ------------------------------------------------------------------------------------------------------
-1) Install knife-azure gem or clone it and run bundle install.
-
-2) login to azure by "cmd : azure login"/ az login
- 
-3) cmd: Import-AzurePublishSettingsFile D:\\chef-repo\\.chef\\Pay-As-You-Go-3-31-2015-credentials.publishsettings
+1) cmd: Import-AzurePublishSettingsFile D:\\chef-repo\\.chef\\Pay-As-You-Go-3-31-2015-credentials.publishsettings
 
 	Install-Module PowerShellGet -Force
 	Install-Module -Name AzureRM -AllowClobber
 	Set-ExecutionPolicy remoteSigned
-	Get-Module -Name PowerShellGet -ListAvailable | Select-Object -Property Name,Version,Path  (Check if moodule is added or not)
+	Get-Module -Name AzureRM -ListAvailable | Select-Object -Property Name,Version,Path  (Check if moodule is added or not)
 	Login-AzureRmAccount
 	
 
-4) cmd: Select-AzureSubscription -SubscriptionName "Pay-As-You-Go"
+3) cmd: Select-AzureSubscription -SubscriptionName "Pay-As-You-Go"
 
-5) cmd: Set-AzureSubscription -SubscriptionName "Pay-As-You-Go" -CurrentStorageAccountName "kdstorage"
+4) cmd: Set-AzureSubscription -SubscriptionName "Pay-As-You-Go" -CurrentStorageAccountName "kdstorage"
+
 ---------------------------------------------------------------------------------------------------------------
 KNIFE AZURERM (ARM) 
+1) Install knife-azure gem or clone it and run bundle install.
 
 KNIFE.rb File
 
