@@ -1,0 +1,97 @@
+POWERSHELL:-
+----------
+
+Login-AzureRmAccount
+
+Set-AzureRmContext -SubscriptionID 'e00d2b3f-3b94-4dfc-ae8e-ca34c8ba1a99'
+
+New-AzureRmResourceGroup -Name ashGroup4 -Location "South Central US"
+
+New-AzureRmResourceGroupDeployment -Name mgDeployment5 -ResourceGroupName mgGroup5 -TemplateFile 'E:\CHEF\azuredeploy.json' -TemplateParameterFile 'E:\CHEF\azuredeploy.parameters.json'
+
+
+AZURE CLI:-
+---------                      
+                                      ----------------------------------------------------------
+                                                     |  Install Azure CLI  |
+                                      ----------------------------------------------------------
+                    
+1. Create a group (resource-group)
+CMD - az group create --name MgEXTENSIONS --location "South Central US"
+
+2. create a vm
+CMD - az vm create --name 'MgWindowsazure' --resource-group 'MgEXTENSIONS' --image Win2016Datacenter --admin-username 'Manik' --admin-password manikmaster#123
+
+3. Fetch all the extension name with publisher list and versions...
+## Find list all extensions and select from that list which extension is suitable for your vm image 
+         CMD - Get-AzureVMAvailableExtension | Select ExtensionName, Publisher, CompanyName, Description | Out-gridView
+## Now use below command to find the list of the selected extension with its publisher name and versions
+         CMD -  Get-AzureVMAvailableExtension -ExtensionName Windows -Publisher Microsoft.Azure.RecoveryServices.SiteRecovery -AllVersions | select ExtensionName,Publisher,Version
+
+4. Set extension to created vm
+CMD - az vm extension set -n ChefClient --version 1210.12.110.1000 --publisher Chef.Bootstrap.WindowsAzure --vm-name 'Manik' --resource-group mgGarg5
+
+                                                           |OR|
+
+CMD - az vm extension set -n Windows --version 1.0.0.8 --publisher Microsoft.Azure.RecoveryServices.SiteRecovery --vm-name 'MgWindowsa' --resource-group ManikGroup52
+
+                               |OR|
+
+CMD - az vm extension set -n Windows --version 1.0.0.9101 --publisher Microsoft.Azure.RecoveryServices.SiteRecovery --vm-name MgWindowsazure --resource-group MgEXTENSION
+                               
+
+AZURE XPALT CLI:-
+---------------
+
+                                      ----------------------------------------------------------
+                                                   |  Install Azure XPALT CLI  |
+                                      ----------------------------------------------------------
+
+
+1. CMD - azure login
+
+2. Create a vm (create vm like with with port number or create it manually on portal)
+FORMAT - azure vm create -n name -g resource_group -Q publisherName:offer:skus:version -u username -p password
+CMD - azure vm create -n 'MgWindowsazure' -g 'MgEXTENSION' -Q MicrosoftWindowsServer:WindowsServer:2012-R2-Datacenter:latest  -u 'manik' -p 'manikmaster#123' -f 'mgNicName'
+
+                                                            THESE I TOOK FROM PORTAL:
+                                           -----------------------------------------------------------------
+                                          |  Location name:  South Central US                               |
+                                          |  Operating system Type:  windows                                |
+                                          |  Enter vnet name:  MgWindowsazureVNET                           |
+                                          |  Enter vnet subnet name:  MgWindowsazureSubnet                  |
+                                           -----------------------------------------------------------------
+
+3. SETTING EXTENSION
+CMD - azure vm extension set-chef -g ashGroup2 -m ash-ubuntu -C Assignment_2/chef-repo/.chef/manikafsgarg.pem -c Assignment_2/chef-repo/.chef/knife.rb --bootstrap_version "13.8.5"
+
+														   
+KNIFE AZURE PLUGIN :-
+------------------
+
+1. ASM mode
+
+CMD -  knife azure server create --azure-vm-size 'Medium' -I 'b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu-16_04-LTS-amd64-server-20180418-en-us-30GB' --azure-service-location 'West US' -x 'azureuser' -P 'azure@123' --bootstrap-protocol 'cloud-api' -c '..\.chef\knife.rb' -N 'manikazure'
+                                               OR
+CMD -  knife azure server create --azure-vm-size 'Medium' -I 'a699494373c04fc0bc8f2bb1389d6106__Windows-Server-2016-with-Containers-20180315-en.us-127GB.vhd' --azure-service-location 'West US' -x 'azureuser' -P 'azure@123' --bootstrap-protocol 'cloud-api' -c 'B:\chef-repo\.chef\knife.rb' -N 'manikazure'											   
+
+2. ARM mode(In ARM mode it automatically installs extension)
+
+CMD - knife azurerm server create --azure-resource-group-name 'MgEXTENSIONS' --azure-vm-name 'mga-21' --azure-service-location 'westus' --azure-image-os-type 'windows' -x 'myuser' -P 'master#123' -c 'B:/chef-repo/.chef/knife.rb' --bootstrap-version '13.8.5' --bootstrap-channel 'stable'
+													OR
+CMD - knife azurerm server create --azure-resource-group-name 'MgEXTENSIONS' --azure-vm-name 'mga-22' --azure-service-location 'westus' --azure-image-os-type 'ubuntu' -x 'myuser' -P 'master#123' -c 'B:/chef-repo/.chef/knife.rb' --bootstrap-version '13.8.5'
+
+
+
+PATH OF EXTENSION FILES:
+
+Note imp: 1) chef extension code is present in this gem path this use to modify the code on vm:
+1) In windows: 
+C:\opscode\chef\embedded\lib\ruby\gems\2.3.0\gems\azure-chef-extension-0.0.1\lib 
+2) In Ubuntu :
+/opt/chef/embedded/lib/ruby/gems/2.3.0/gems/azure-chef-extension-0.0.1/lib
+& then run enable cmd from path : 
+1) In windows:
+C:\Packages\Plugins\Chef.Bootstrap.WindowsAzure.ChefClient\1210.12.109.1003 
+2) In Ubuntu:
+/var/lib/waagent/Chef.Bootstrap.WindowsAzure.LinuxChefClient-1210.12.106.1002

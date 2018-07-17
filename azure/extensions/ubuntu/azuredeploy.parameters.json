@@ -1,0 +1,48 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "newStorageAccountName": {
+      "value": "mg12345"
+    },
+    "adminUserName": {
+      "value": "azure"
+    },
+    "adminPassword": {
+      "value": "Azureazure@123"
+    },
+    "vmDnsName": {
+      "value": "mg-105"
+    },
+    "osType": {
+      "value": "Ubuntu-14.04.2-LTS"
+    },
+    "location": {
+      "value": "westus"
+    },
+    "vmSize": {
+      "value": "Standard_DS1_v2"
+    },
+    "chef_node_name": {
+      "value": "ubuntu-102"
+    },
+    "chef_server_url": {
+      "value": "https://manage.chef.io/organizations/msys_m"
+    },
+    "validation_client_name": {
+      "value": "msys_m-validator"
+    },
+    "runlist": {
+      "value": "recipe[ohai_attributes]"
+    },
+    "autoUpdateClient": {
+      "value": "false"
+    },
+    "validation_key": {
+      "value": "XYZ"
+    },
+    "secret" : {
+      "value" : "abc:%123"
+    }
+  }
+}

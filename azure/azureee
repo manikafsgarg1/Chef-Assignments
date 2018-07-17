@@ -1,0 +1,50 @@
+
+-----------------------------------------------------------------------------------------------------
+
+INSTALL AZURE POWERSHELL  https://github.com/Azure/azure-powershell/releases
+
+------------------------------------------------------------------------------------------------------
+1) Install knife-azure gem or clone it and run bundle install.
+
+2) login to azure by "cmd : azure login"/ az login
+ 
+3) cmd: Import-AzurePublishSettingsFile D:\\chef-repo\\.chef\\Pay-As-You-Go-3-31-2015-credentials.publishsettings
+
+	Install-Module PowerShellGet -Force
+	Install-Module -Name AzureRM -AllowClobber
+	Set-ExecutionPolicy remoteSigned
+	Get-Module -Name PowerShellGet -ListAvailable | Select-Object -Property Name,Version,Path  (Check if moodule is added or not)
+	Login-AzureRmAccount
+	
+
+4) cmd: Select-AzureSubscription -SubscriptionName "Pay-As-You-Go"
+
+5) cmd: Set-AzureSubscription -SubscriptionName "Pay-As-You-Go" -CurrentStorageAccountName "kdstorage"
+---------------------------------------------------------------------------------------------------------------
+KNIFE AZURERM (ARM) 
+
+KNIFE.rb File
+
+knife[:azure_publish_settings_file] = "E:/CHEF/chef-repo/.chef/Pay-As-You-Go-3-31-2015-credentials.publishsettings"
+knife[:azure_tenant_id] = "abeb039a-5e53-40ee-b48f-0c99bdc99d15"
+knife[:azure_client_id] = "5490e902-6689-425f-8056-e9f11d7f88a1"
+
+
+knife azurerm server create --azure-vm-name 'manik' --azure-vm-size 'Small' --azure-service-location 'westus' --azure-resource-group-name dh-wintask-test2k8 --azure-image-os-type ubuntu --azure-image-reference-sku '16.04-LTS' --ssh-user ubuntu -c C:/CHEF/chef-repo/.chef/knife.rb
+OR
+knife azurerm server create --azure-resource-group-name 'mgextensions' --azure-vm-name 'mga-107' --azure-service-location 'westus' --azure-image-os-type 'windows' -x 'myuser' -P 'master#123' -c 'B:/chef-repo/.chef/knife.rb'
+------------------------------------------------------------------------------------------------------------------
+
+KNIFE AZURE (ASM MODE)
+
+To get azure source image:-
+(https://msdn.microsoft.com/en-us/library/dn135249(v=nav.70).aspx)
+Get-AzureVMImage | where-object { $_.Label -like "<NAME OF THE VM PLATFORM>*" }  
+EG:-
+Get-AzureVMImage | where-object { $_.Label -like "Windows Server 2016 Datacenter*" }
+
+Command:
+
+knife azure server create --azure-vm-size 'Small' -I b39f27a8b8c64d52b05eac6a62ebad85__Ubuntu_DAILY_BUILD-xenial-16_04-LTS-amd64-server-20180329-en-us-30GB --azure-service-location 'West US' --ssh-user ubuntu
+
+
