@@ -1,0 +1,18 @@
+1. Worked with knife bootstrap windows command. As this was generating errors as it was not recieving any response from the node so for this issue I followed https://github.com/chef/knife-windows/issues/226 link and according to this I went to the node and then opened port 5985 and 5986 and after that I changed profile to  public  for "Windows Remote Management(HTTP-In) in the Inbound Rules". and after this steps it worked. Command worked is :
+
+     ----   knife bootstrap windows winrm 54.173.184.247 --winrm-user "Administrator" -c ../.chef/knife.rb --no-name manik_ashwini
+
+2. Then I added --distro option to this command and checked to run template.erb file. For this I made an erb file and added text inside it. As I am not familiar with the syntax of erb file so I manually went to the node and set environment variables on powershell and than i run that command and it worked fine.
+
+     ----  knife bootstrap windows winrm 54.173.184.247 --winrm-user "Administrator" -c ../knife.rb --no-name manik_ashwini --distro  templ.erb
+
+3. Followed some links :
+
+To disable password restrictions - https://social.technet.microsoft.com/Forums/sharepoint/en-US/d73afcfb-0378-4c1e-9196-a637646ddb04/error-the-password-does-not-meet-the-password-policy-requirements-?forum=winserverGP
+
+To solve issue of knife bootstrap - https://github.com/chef/knife-windows/issues/226
+ 
+Read about distro and how it works - https://docs-archive.chef.io/release/11-14/knife_bootstrap.html
+Path to template.erb file - chef-repo/.chef/bootstrap/templ.erb
+
+Note: --distro has been depreciated so it will be good to use --bootstrap-template instead of this thing.
