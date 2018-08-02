@@ -1,0 +1,52 @@
+
+
+Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+
+Choose Launch Instance.
+
+On the Choose an Amazon Machine Image (AMI) page, select an AMI, and choose Select.
+
+On the Choose an Instance Type page, select a T2 instance type, and choose Next: Configure Instance Details. 
+
+
+On the Configure Instance Details page, for T2 Unlimited, choose Enable, and then choose Next: Add Storage.
+
+Continue as prompted by the wizard. When you've finished reviewing your options on the Review Instance Launch page, choose Launch to choose a key pair and launch the T2 instance. For more information
+
+-----------------------------------------------------------------------------------------
+                    |     Note : Only t2 instances can be unlimited..  |
+-----------------------------------------------------------------------------------------
+option to add unlimited:
+
+  --credit-specification (structure)
+
+	    The credit option for CPU usage of the instance. Valid values are standard and unlimited . To change this attribute after launch, use modify-instance-credit-specification . For more information, see T2 Instances in the Amazon Elastic Compute Cloud User Guide .
+
+    Default: standard
+
+    Shorthand Syntax:
+
+CpuCredits=string
+
+JSON Syntax:
+
+{
+  "CpuCredits": "string"
+}
+
+
+Ruby:
+{
+	cpu_credits ⇒ String
+}
+Here string can be unlimited or standard	
+
+
+We have to define CreditSpecification in the section where we define all the details of our instance like availability zone, image id, instance type, key kname, security group id and all.	
+
+
+We have to make a class """"Class: knife::EC2::Types::CreditSpecification"""" 
+
+CreditSpecification is just the name of a class where they have defined all the properties of the instance so therefore our main option is CPUCREDITS.
+
+ you can check your T2 credit programmatically with the CPUCreditUsage and CPUCreditBalance CloudWatch metrics

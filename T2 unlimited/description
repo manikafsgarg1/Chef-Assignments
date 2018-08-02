@@ -1,0 +1,17 @@
+Hi,
+
+Researches based on setting t2 instances unlimited through knife ec2:-
+
+1. In Aws-cli:
+    -- In aws cli ec2 they have used this option of setting t2 instances. They have used --credit-specification option for this thing. and under --credit-specification theirs an option -cpu_credits = string where this string can be 'standard' or 'unlimited'. By default this value is set to 'standard'.
+
+2. I debugged the server list code and fetched the details of the already created instance. This was done to check as if t2 unlimited or standard value is returned or not from aws. But there was no attribute returned which contain this value.
+
+3. In FOG
+  -- This gem does not contain this functionality. I searched in FOG library this also does not thsi feature. Actually in knife ec2 as we create our connection using this library but this library doesnot support these options so that is the reason these options are not in knife ec2.
+
+4. CloudWatch Metrics
+   -- There was a term Cloud Watch metrices which i found. In this there are many options to set CPU CREDITS information (such as CPUCreditUsage, CPUCreditBalance, etc) But these values also are being used in aws-cli only.
+
+5. Chef Provisioning AWS
+   -- I checked these options in chef-provisioning-aws but dint find these options here as well.  
