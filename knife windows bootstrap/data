@@ -2,6 +2,25 @@
 
      ----   knife bootstrap windows winrm 54.173.184.247 --winrm-user "Administrator" -c ../.chef/knife.rb --no-name manik_ashwini
 
+
+							or
+RUN COMMANDS 
+
+winrm quickconfig -q
+winrm create winrm/config/Listener?Address=*+Transport=HTTP
+winrm set winrm/config/winrs '@{MaxMemoryPerShellMB="300"}'
+winrm set winrm/config '@{MaxTimeoutms="1800000"}'
+winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+winrm set winrm/config/service/auth '@{Basic="true"}'
+netsh advfirewall firewall add rule name="WinRM 5985" protocol=TCP dir=in localport=5985 action=allow
+netsh advfirewall firewall add rule name="WinRM 5986" protocol=TCP dir=in localport=5986 action=allow
+NetSh Advfirewall set allprofiles state off
+net stop winrm
+sc config winrm start=auto
+net start winrm
+
+
+
 2. Then I added --distro option to this command and checked to run template.erb file. For this I made an erb file and added text inside it. As I am not familiar with the syntax of erb file so I manually went to the node and set environment variables on powershell and than i run that command and it worked fine.
 
      ----  knife bootstrap windows winrm 54.173.184.247 --winrm-user "Administrator" -c ../knife.rb --no-name manik_ashwini --distro  templ.erb
