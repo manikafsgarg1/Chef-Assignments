@@ -1,0 +1,227 @@
+VPC and Subnet Basics
+
+A virtual private cloud (VPC) is a virtual network dedicated to your AWS account. It is logically isolated from other virtual networks in the AWS Cloud. You can launch your AWS resources, such as Amazon EC2 instances, into your VPC.
+
+When you create a VPC, you must specify a range of IPv4 addresses for the VPC in the form of a Classless Inter-Domain Routing (CIDR) block; for example, 10.0.0.0/16.
+
+
+A VPC spans all the Availability Zones in the region. After creating a VPC, you can add one or more subnets in each Availability Zone. When you create a subnet, you specify the CIDR block for the subnet, which is a subset of the VPC CIDR block. Each subnet must reside entirely within one Availability Zone and cannot span zones. Availability Zones are distinct locations that are engineered to be isolated from failures in other Availability Zones. By launching instances in separate Availability Zones, you can protect your applications from the failure of a single location. We assign a unique ID to each subnet. 
+
+If a subnet's traffic is routed to an internet gateway, the subnet is known as a public subnet.  If you want your instance in a public subnet to communicate with the internet over IPv4, it must have a public IPv4 address or an Elastic IP address (IPv4).
+
+If a subnet doesn't have a route to the internet gateway, the subnet is known as a private subnet.
+
+If a subnet doesn't have a route to the internet gateway, but has its traffic routed to a virtual private gateway for a VPN connection, the subnet is known as a VPN-only subnet.
+
+
+if you create a VPC with CIDR block 10.0.0.0/24, it supports 256 IP addresses. You can break this CIDR block into two subnets, each supporting 128 IP addresses. One subnet uses CIDR block 10.0.0.0/25 (for addresses 10.0.0.0 - 10.0.0.127) and the other uses CIDR block 10.0.0.128/25 (for addresses 10.0.0.128 - 10.0.0.255). 
+
+The first four IP addresses and the last IP address in each subnet CIDR block are not available for you to use, and cannot be assigned to an instance. For example, in a subnet with CIDR block 10.0.0.0/24, the following five IP addresses are reserved:
+
+    10.0.0.0: Network address.
+
+    10.0.0.1: Reserved by AWS for the VPC router.
+
+    10.0.0.2: Reserved by AWS. The IP address of the DNS server is always the base of the VPC network range plus two; however, we also reserve the base of each subnet range plus two. For VPCs with multiple CIDR blocks, the IP address of the DNS server is located in the primary CIDR. 
+
+
+
+10.0.0.3: Reserved by AWS for future use.
+
+10.0.0.255: Network broadcast address. We do not support broadcast in a VPC, therefore we reserve this address.
+
+
+-----------------------------------------------------------------------------------------
+Adding IPv4 CIDR Blocks to a VPC :-
+
+You can associate secondary IPv4 CIDR blocks with your VPC. When you associate a CIDR block with your VPC, a route is automatically added to your VPC route tables to enable routing within the VPC
+
+
+-----------------------------------------------------------------------------------------------------------
+
+VPCs per region
+	
+
+5
+	
+
+The limit for internet gateways per region is directly correlated to this one. Increasing this limit increases the limit on internet gateways per region by the same amount.
+
+The number of VPCs in the region multiplied by the number of security groups per VPC cannot exceed 5000.
+
+Subnets per VPC
+	
+
+200
+	
+
+-
+IPv4 CIDR blocks per VPC 	5 	This limit is made up of your primary CIDR block plus 4 secondary CIDR blocks.
+
+----------------------------------------------------------------------------------------------------------------
+
+Security group rules:
+
+
+The following are the characteristics of security group rules:
+
+    By default, security groups allow all outbound traffic.
+
+    You can't change the outbound rules for an EC2-Classic security group.
+
+    Security group rules are always permissive; you can't create rules that deny access.
+
+    You can add and remove rules at any time. Your changes are automatically applied to the instances associated with the security group after a short period. 
+
+----------------------------------------------------------------------------------------------------------------
+
+Security Groups for EC2-Classic
+
+If you're using EC2-Classic, you must use security groups created specifically for EC2-Classic. When you launch an instance in EC2-Classic, you must specify a security group in the same region as the instance. You can't specify a security group that you created for a VPC when you launch an instance in EC2-Classic.
+
+After you launch an instance in EC2-Classic, you can't change its security groups. However, you can add rules to or remove rules from a security group, and those changes are automatically applied to all instances that are associated with the security group after a short period.
+
+In EC2-Classic, you can have up to 500 security groups in each region for each account. You can associate an instance with up to 500 security groups and add up to 100 rules to a security group. 
+
+---------------------------------------------------------------------------------------------------------------
+
+Security Groups for EC2-VPC
+
+When you launch an instance in a VPC, you must specify a security group that's created for the VPC. If your account supports EC2-Classic, you can't specify a security group that you created for EC2-Classic when you launch an instance in a VPC. Security groups for EC2-VPC have additional capabilities that aren't supported by security groups for EC2-Classic. For more information, see Differences Between Security Groups for EC2-Classic and EC2-VPC in the Amazon VPC User Guide.
+
+After you launch an instance in a VPC, you can change its security groups. Security groups are associated with network interfaces. Changing an instance's security groups changes the security groups associated with the primary network interface (eth0). 
+
+
+Security groups for EC2-VPC have separate limits. The security groups for EC2-Classic do not count against the security group limit for EC2-VPC. 
+
+---------------------------------------------------------------------------------------------------------------
+
+
+
+Inbound rules
+Protocol type 	Port number 	Source IP
+TCP 			22 (SSH) 			203.0.113.1/32
+TCP 			80 (HTTP) 			0.0.0.0/0
+ICMP 			All 				0.0.0.0/0
+Outbound rules
+Protocol type 	Port number 	Destination IP
+All 			All 				0.0.0.0/0
+
+TCP traffic on port 22 (SSH) to and from the instance is tracked, because the inbound rule allows traffic from 203.0.113.1/32 only, and not all IP addresses (0.0.0.0/0). TCP traffic on port 80 (HTTP) to and from the instance is not tracked, because both the inbound and outbound rules allow all traffic (0.0.0.0/0). ICMP traffic is always tracked, regardless of rules.
+
+---------------------------------------------------------------------------------------------------------------
+
+Default Security Groups
+
+Your AWS account automatically has a default security group per VPC and per region for EC2-Classic. If you don't specify a security group when you launch an instance, the instance is automatically associated with the default security group.
+
+A default security group is named default, and it has an ID assigned by AWS. The following are the default rules for each default security group:
+
+    Allows all inbound traffic from other instances associated with the default security group (the security group specifies itself as a source security group in its inbound rules)
+
+    Allows all outbound traffic from the instance.
+
+You can add or remove the inbound rules for any EC2-Classic default security group. You can add or remove outbound rules for any VPC default security group.
+
+You can't delete a default security group. If you try to delete the EC2-Classic default security group.
+
+----------------------------------------------------------------------------------------------------------------
+
+Custom Security Groups
+
+If you don't want your instances to use the default security group, you can create your own security groups and specify them when you launch your instances. You can create multiple security groups to reflect the different roles that your instances play; for example, a web server or a database server.
+
+When you create a security group, you must provide it with a name and a description. Security group names and descriptions can be up to 255 characters in length, and are limited to the following characters:
+
+    EC2-Classic: ASCII characters
+
+    EC2-VPC: a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*
+
+A security group name cannot start with sg-. For EC2-Classic, the security group name must be unique within your account for the region. For EC2-VPC, the name must be unique within the VPC.
+
+The following are the default rules for a security group that you create:
+
+    Allows no inbound traffic
+
+    Allows all outbound traffic
+
+After you've created a security group, you can change its inbound rules to reflect the type of inbound traffic that you want to reach the associated instances. In EC2-VPC, you can also change its outbound rules. 
+
+------------------------------------------------------------------------------------------------------------
+
+Elastic Serach Engine
+
+1. Regions and Endpoints for Amazon Elasticsearch Service
+
+Amazon ES provides regional endpoints for accessing the configuration API and domain-specific endpoints for accessing the Elasticsearch APIs. 
+
+2. Choosing Instance Types
+
+3. Scaling in Amazon Elasticsearch Service (initial number of elasticsearch instances and instance type.)
+
+------------------------------------------------------------------------------------------------------------
+
+Elastic Load Balancing
+
+Elastic Load Balancing automatically distributes incoming application traffic across multiple targets, such as Amazon EC2 instances, containers, and IP addresses. It can handle the varying load of your application traffic in a single Availability Zone or across multiple Availability Zones. Elastic Load Balancing offers three types of load balancers that all feature the high availability, automatic scaling, and robust security necessary to make your applications fault tolerant.
+
+1. 
+
+Application Load Balancer
+
+Application Load Balancer is best suited for load balancing of HTTP and HTTPS traffic and provides advanced request routing targeted at the delivery of modern application architectures, including microservices and containers. Operating at the individual request level (Layer 7), Application Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) based on the content of the request.
+
+2. 
+
+
+Network Load Balancer
+
+Network Load Balancer is best suited for load balancing of TCP traffic where extreme performance is required. Operating at the connection level (Layer 4), Network Load Balancer routes traffic to targets within Amazon Virtual Private Cloud (Amazon VPC) and is capable of handling millions of requests per second while maintaining ultra-low latencies. Network Load Balancer is also optimized to handle sudden and volatile traffic patterns.
+
+3.
+
+
+
+Classic Load Balancer
+
+Classic Load Balancer provides basic load balancing across multiple Amazon EC2 instances and operates at both the request level and connection level. Classic Load Balancer is intended for applications that were built within the EC2-Classic network.
+
+------------------------------------------------------------------------------------------------------
+Elastic Load Balancing Benefits:-
+
+Highly Available
+
+Elastic Load Balancing automatically distributes incoming traffic across multiple targets – Amazon EC2 instances, containers, and IP addresses – in multiple Availability Zones and ensures only healthy targets receive traffic. Elastic Load Balancing can also load balance across a Region, routing traffic to healthy targets in different Availability Zones.
+
+
+
+Secure
+
+Elastic Load Balancing works with Amazon Virtual Private Cloud (VPC) to provide robust security features, including integrated certificate management and SSL decryption. Together, they give you the flexibility to centrally manage SSL settings and offload CPU intensive workloads from your applications.                    
+
+
+
+
+Elastic
+
+Elastic Load Balancing is capable of handling rapid changes in network traffic patterns. Additionally, deep integration with Auto Scaling ensures sufficient application capacity to meet varying levels of application load without requiring manual intervention.     
+
+
+--------------------------------------------------------------------------------------------------
+
+
+													AZURE
+
+A network security group (NSG) contains a list of security rules that allow or deny network traffic to resources connected to Azure Virtual Networks (VNet). NSGs can be associated to subnets, individual VMs (classic), or individual network interfaces (NIC) attached to VMs (Resource Manager). When an NSG is associated to a subnet, the rules apply to all resources connected to the subnet. Traffic can further be restricted by also associating an NSG to a VM or NIC.
+
+Properties of NSG
+
+Name
+Region
+Inbound and outbound Rules
+resource group
+
+
+---------------------------------------------------------------------------------------------------------
+
+

@@ -1,0 +1,30 @@
+Hi,
+Link to open source issue:  https://github.com/chef/knife-ec2/issues/473
+1. Firstly for this open source error I read about Proxy commands and all
+2. Then after studying and implementing it manually i Jumped to proxy in knife ec2 commands.
+3. I debugged this code and got to know how it works.
+4. Then i jumped to this open source issue. His issue was that his proxy command dint match the proxy_pattern in knife ec2.
+
+RESEARCHES BASED ON THIS ISSUE:
+
+1. First as the person is using usr/bin/ssh for ssh he may use it in proxy commands but cannot use it if he is using this proxy command with knife ec2 the reason behind it is that whatever proxy command we use it first matches a pattern in knife ec2 and this pattern is
+proxy_pattern = /ssh\s+(\S+)\s+nc/
+and according to this pattern we want ssh in the proxy command. So to use it first he needs to set environment variable ssh = usr/bin/ssh and then he can easily use.
+2. I used following commands and debugged the code:
+
+  ProxyCommand /usr/bin/ssh -q -p 22474 -At nc %h 22 -- this is his command which dint matched the pattern because of the reason above
+  ProxyCommand ssh  nc %h %p --- in this what happened was it matched the proxy pattern but after matching when the code continues it ends up with an error because we dint mention any of the gateway.
+   ProxyCommand ssh Proxy_server nc %h %p --- this worked fine.
+
+After these command i reached to the conclusion that we cannot use -p -q and all option of nc in knife ec2. But upon more research i came across that we can use it there were following errors in his command to work upon (in the Description)
+
+Description:
+As we cannot pass /usr/bin/ssh in knife ec2 because on matching the proxy pattern it will create an error so you can do one thing set environment variable ssh as /usr/bin/ssh and then use the command 
+ProxyCommand ssh PROXY_SERVER nc -q -p 22474 -At %h 22
+It will match the pattern but after matching it will create errors because you have not passed values to -q. As -q is for time period for which our port will be open so pass a time in seconds for it e.g
+ProxyCommand ssh PROXY_SERVER nc -q 60 -p 22474 -At %h 22
+then -At is a wrong option in nc theres no such option defined so delete it. therefore final command should be 
+ProxyCommand ssh PROXY_SERVER nc -q 60 -p 22474 %h 22
+(Proof that -At is not an option in nc is :  https://www.computerhope.com/unix/nc.htm )
+
+Therefore this command is matching the pattern in knife ec2 as well as working fine.

@@ -1,0 +1,14 @@
+Host Proxy_server
+  Hostname      ec2-54-226-50-144.compute-1.amazonaws.com
+  User          ubuntu
+  IdentityFile  ~/Assignment_2/.chef/ashkey.pem
+
+Host 172.*
+  User          ubuntu
+  IdentityFile  ~/Assignment_2/.chef/ashkey.pem  
+  ProxyCommand ssh Proxy_server -W %h:%p
+
+Host ec2-*
+  IdentityFile  ~/Assignment_2/.chef/ashkey.pem  
+  ProxyCommand /usr/bin/ssh -q -p 22474 -At nc %h 22
+
